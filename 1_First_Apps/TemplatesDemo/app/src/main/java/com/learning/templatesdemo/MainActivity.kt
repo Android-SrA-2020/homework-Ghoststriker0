@@ -4,20 +4,29 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
+import com.learning.templatesdemo.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+
+        //Now, this variable has a reference of all the id of this layout
+        binding =  DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         //a snackbar is a bar with instruction/text in it
-        fab.setOnClickListener { view ->
+        binding.apply{
+            fab.setOnClickListener { view ->
             Snackbar.make(view, "This FAB needs an action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+            }
         }
     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,7 +58,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun getRandomDiceImage() : Int {
 
-        return when (Random().nextInt(6) + 1) {
+        //Random().nextInt(6) java random
+        //below is the kotlin random
+        return when ((0..6).random() + 1) {
             1 -> R.drawable.dice_1
             2 -> R.drawable.dice_2
             3 -> R.drawable.dice_3
