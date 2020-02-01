@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         //Allows the user to display the navigation drawer
         NavigationUI.setupWithNavController(binding.navView, navController)
+
     }
 
     //this is used to call navigate up in the navigation controller
