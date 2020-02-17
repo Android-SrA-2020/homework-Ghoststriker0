@@ -58,23 +58,28 @@ class GameFragment : Fragment() {
 
         /** Setting up LiveData observation relationship **/
         //Attaching an observer to our viewModel
-        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
+//        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
+//            binding.scoreText.text = newScore.toString()
+//        })
 
-        /** Setting up LiveData observation relationship **/
-        viewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.wordText.text = newWord
-        })
+//        /** Setting up LiveData observation relationship **/
+//        viewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
+//            binding.wordText.text = newWord
+//        })
 
         // Observer for the Game finished event
         viewModel.eventGameFinish.observe(viewLifecycleOwner, Observer<Boolean> { hasFinished ->
             if (hasFinished) gameFinished()
         })
 
-        binding.correctButton.setOnClickListener { onCorrect() }
-        binding.skipButton.setOnClickListener { onSkip() }
-        binding.endGameButton.setOnClickListener { onEndGame() }
+//        binding.correctButton.setOnClickListener { onCorrect() }
+//        binding.skipButton.setOnClickListener { onSkip() }
+//        binding.endGameButton.setOnClickListener { onEndGame() }
+        binding.gameViewModel = viewModel
+
+        // Specify the fragment view as the lifecycle owner of the binding.
+        // This is used so that the binding can observe LiveData updates
+        binding.lifecycleOwner = viewLifecycleOwner
 
         updateScoreText()
         updateWordText()
@@ -84,17 +89,22 @@ class GameFragment : Fragment() {
 
     /** Methods for button click handlers **/
 
-    private fun onSkip() {
-        viewModel.onSkip()
-        updateWordText()
-        updateScoreText()
-    }
-
-    private fun onCorrect() {
-        viewModel.onCorrect()
-        updateScoreText()
-        updateWordText()
-    }
+//    private fun onSkip() {
+//        viewModel.onSkip()
+//        updateWordText()
+//        updateScoreText()
+//    }
+//
+//    private fun onCorrect() {
+//        viewModel.onCorrect()
+//        updateScoreText()
+//        updateWordText()
+//    }
+//
+//    /** method to end the game **/
+//    private fun onEndGame() {
+//        gameFinished()
+//    }
 
     /** Methods for updating the UI **/
 
@@ -106,10 +116,7 @@ class GameFragment : Fragment() {
         binding.scoreText.text = viewModel.score.value.toString()
     }
 
-    /** method to end the game **/
-    private fun onEndGame() {
-        gameFinished()
-    }
+
 
     /**
      * Called when the game is finished
