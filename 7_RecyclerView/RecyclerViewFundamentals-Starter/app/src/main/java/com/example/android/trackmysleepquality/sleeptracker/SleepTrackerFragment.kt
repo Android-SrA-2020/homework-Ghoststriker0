@@ -74,7 +74,7 @@ class SleepTrackerFragment : Fragment() {
         // you can make sure this observer is only active when the RecyclerView is on the screen.
         sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data = it
+                adapter.submitList(it)
             }
         })
 

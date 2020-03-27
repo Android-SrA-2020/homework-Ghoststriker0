@@ -1,32 +1,28 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.convertDurationToFormatted
-import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 
 /**
  * Created by Martin Mallet on 2020-03-26
  */
 
-class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
+class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
+    override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+        return oldItem.nightId == newItem.nightId
+    }
 
-    //this is to hold the data
-    //that custom setter will reassign the data and also redraw the list with the new data since the data changed.
-    var data = listOf<SleepNight>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    override fun areContentsTheSame(oldItem: SleepNight, newItem: SleepNight): Boolean {
+        return oldItem == newItem
+    }
+}
 
-    //we need this so that the recycler view knows how many items to return
-    override fun getItemCount() = data.size
+class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.ViewHolder>(SleepNightDiffCallback()) {
 
     /*
     * The onBindViewHolder() function is called by RecyclerView to display the data for one list
@@ -35,7 +31,7 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
     * and the position is the position in the list.
     * */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
+        val item = getItem(position)
         holder.bind(item)
     }
 
@@ -51,26 +47,11 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sleepLength: TextView = itemView.findViewById(R.id.sleep_length)
-        val quality: TextView = itemView.findViewById(R.id.quality_string)
-        val qualityImage: ImageView = itemView.findViewById(R.id.quality_image)
+    class ViewHolder(val binding: ListItemSleepNightBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SleepNight) {
-            val res = itemView.context.resources
-            sleepLength.text = convertDurationToFormatted(
-                    item.startTimeMilli, item.endTimeMilli, res)
-            quality.text = convertNumericQualityToString(
-                    item.sleepQuality, res)
-            qualityImage.setImageResource(when (item.sleepQuality) {
-                0 -> R.drawable.ic_sleep_0
-                1 -> R.drawable.ic_sleep_1
-                2 -> R.drawable.ic_sleep_2
-                3 -> R.drawable.ic_sleep_3
-                4 -> R.drawable.ic_sleep_4
-                5 -> R.drawable.ic_sleep_5
-                else -> R.drawable.ic_sleep_active
-            })
+            binding.sleep = item
+            binding.executePendingBindings()
         }
 
         companion object {
@@ -78,15 +59,11 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.ViewHolder>() {
                 val layoutInflater =
                         LayoutInflater.from(parent.context)
 
-                //Now I use the layout inflater to create my views.
-                //If I had different types of view, I would have a checker to see which type of view to create. Switch of if statement
-                val view = layoutInflater
-                        .inflate(R.layout.list_item_sleep_night,
-                                parent, false)
-
+                val binding =
+                        ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
 
                 //then, I return the created view.
-                return ViewHolder(view)
+                return ViewHolder(binding)
             }
         }
     }
